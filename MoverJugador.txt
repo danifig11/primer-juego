@@ -1,0 +1,15 @@
+public Player()
+    {
+        setRotation(270);
+    }
+public void moveAround()
+    {
+        if(Greenfoot.isKeyDown("right"))
+        {
+            setLocation(getX()+5,getY());
+        }
+        if(Greenfoot.isKeyDown("left"))
+        {
+            setLocation(getX()-5,getY());
+        }
+    }
