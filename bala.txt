@@ -1,0 +1,7 @@
+public void firebala()
+    {
+        if (Greenfoot.isKeyDown("space"))
+        {
+            getWorld().addObject(new bala(),getX(), getY()-30);
+        }
+    }
