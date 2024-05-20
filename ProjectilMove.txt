@@ -1,0 +1,17 @@
+public void balamove()
+    {
+        setLocation(getX(),getY() - 5);
+    }
+    public void removeFromWorld()
+    {
+        Actor enemy = getOneIntersectingObject(Enemy.class);
+        if (enemy != null)
+        {
+            getWorld().removeObject(enemy);
+            getWorld().removeObject(this);
+        }
+        else if (getY()==0)
+        {
+            getWorld().removeObject(this);
+        }
+    }
