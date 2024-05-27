@@ -1,0 +1,353 @@
+﻿Codigo Fuente del Juego.
+MYWORLD
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+/**
+ * Write a description of class MyWorld here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class MyWorld extends World
+{
+    HealthBar healthbar = new HealthBar();
+    Counter counter = new Counter();
+    /**
+     * Constructor for objects of class MyWorld.
+     * 
+     */
+    public MyWorld()
+    {    
+        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
+        super(600, 600, 1); 
+        prepare();
+    }
+    public Counter getCounter()
+    {
+        return counter;
+    }
+    public HealthBar getHealthBar()
+    {
+        return healthbar;
+    }
+    public void act()
+    {
+        addEnemy1();
+        addEnemy2();
+    }
+    public void addEnemy1()
+    {
+        if(Greenfoot.getRandomNumber(60)<1)
+        {
+            addObject(new Enemy1(), Greenfoot.getRandomNumber(600), 0);
+        }
+    }
+    public void addEnemy2()
+    {
+        if(Greenfoot.getRandomNumber(100)<1)
+        {
+            addObject(new Enemy2(), Greenfoot.getRandomNumber(600), 0);
+        }
+    }
+    /**
+     * Prepare the world for the start of the program.
+     * That is: create the initial objects and add them to the world.
+     */
+    private void prepare()
+    {
+        addObject(counter, 70, 30);
+        addObject(healthbar, 55,70);
+        Player player = new Player();
+        addObject(player,288,528);
+    }
+}
+COUNTER
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+/**
+ * Write a description of class Counter here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Counter extends Actor
+{
+    int score = 0;
+    /**
+     * Act - do whatever the Counter wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
+    public Counter()
+    {
+        setImage(new GreenfootImage("Score: " + score, 40, Color.GREEN, Color.BLACK));
+    }
+    public void act()
+    {
+        setImage(new GreenfootImage("Score: " + score, 40, Color.GREEN, Color.BLACK));
+    }
+    public void addScore()
+    {
+        score++;
+    }
+}
+ENEMY
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+/**
+ * Write a description of class Enemy here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Enemy extends Actor
+{
+    /**
+     * Act - do whatever the Enemy wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
+    public void act()
+    {
+        // Add your action code here.
+    }
+    public void moveEnemy()
+    {
+        setLocation(getX(),getY()+3);
+    }
+    public void removeEnemy()
+    {
+        if (getY()==599)
+        {
+            getWorld().removeObject(this);
+        }
+    }
+}
+ENEMY 1
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+/**
+ * Write a description of class Enemy1 here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Enemy1 extends Enemy
+{
+    /**
+     * Act - do whatever the Enemy1 wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
+    public Enemy1()
+    {
+        setRotation(90);
+    }
+    public void act()
+    {
+         moveEnemy();
+        hitByProjectile();
+    }
+    public void hitByProjectile()
+    {
+        Actor bala = getOneIntersectingObject(bala.class);
+        if (bala != null)
+        {
+            getWorld().removeObject(bala);
+            World world = getWorld();
+            MyWorld myWorld = (MyWorld)world;
+            Counter counter = myWorld.getCounter();
+            counter.addScore();
+            getWorld().removeObject(this);
+
+        }
+        else if (getY()==599)
+        {
+            World world = getWorld();
+            MyWorld myWorld = (MyWorld)world;
+            HealthBar healthbar = myWorld.getHealthBar();
+            healthbar.loseHealth();
+            getWorld().removeObject(this);
+        }
+    }
+}
+ENEMY 2
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+/**
+ * Write a description of class Enemy2 here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Enemy2 extends Enemy
+{
+    int timesHit = 2;
+    /**
+     * Act - do whatever the Enemy2 wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
+    public Enemy2()
+    {
+        setRotation(90);
+    }
+    public void act()
+    {
+         moveEnemy();
+        hitByProjectile();
+    }
+    public void hitByProjectile()
+    {
+        Actor bala = getOneIntersectingObject(bala.class);
+        if (bala != null)
+        {
+            getWorld().removeObject(bala);
+            World world = getWorld();
+            MyWorld myWorld = (MyWorld)world;
+            Counter counter = myWorld.getCounter();
+            counter.addScore();
+            timesHit--;
+        }
+        if (timesHit == 0)
+        {
+            getWorld().removeObject(this);
+        }
+        else if (getY()==599)
+        {
+            World world = getWorld();
+            MyWorld myWorld = (MyWorld)world;
+            HealthBar healthbar = myWorld.getHealthBar();
+            healthbar.loseHealth();
+            healthbar.loseHealth();
+            getWorld().removeObject(this);
+        }
+    }
+}
+BARRA DE VIDA
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+/**
+ * Write a description of class HealthBar here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class HealthBar extends Actor
+{
+    /**
+     * Act - do whatever the HealthBar wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
+    int health = 20;
+    int healthBarWidth = 80;
+    int healthBarHeight = 10;
+    int PixelsPerHealthPoint = (int)healthBarWidth/health;
+    public HealthBar()
+    {
+        update();
+    }
+    public void act()
+    {
+        update();
+        youLose();
+    }
+    public void update()
+    {
+        setImage(new GreenfootImage(healthBarWidth + 2, healthBarHeight + 2));
+        GreenfootImage myImage = getImage();
+        myImage.setColor(Color.WHITE);
+        myImage.drawRect(0,0, healthBarWidth + 1, healthBarHeight + 1);
+        myImage.setColor(Color.RED);
+        myImage.fillRect(1,1, health*PixelsPerHealthPoint, healthBarHeight);
+    }
+    public void loseHealth()
+    {
+        health--;
+    }
+    public void youLose()
+    {
+        if (health == 0)
+        {
+            getWorld().addObject(new YouLose(), 300, 300);
+            Greenfoot.stop();
+        }
+    }
+}
+JUGADOR
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+/**
+ * Write a description of class Player here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Player extends Actor
+{
+    boolean canFire = true;
+    /**
+     * Act - do whatever the Player wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
+    public Player()
+    {
+        setRotation(270);
+    }
+    public void act()
+    {
+        moveAround();
+        firebala();
+    }
+    public void moveAround()
+    {
+        if(Greenfoot.isKeyDown("right"))
+        {
+            setLocation(getX()+5,getY());
+        }
+        if(Greenfoot.isKeyDown("left"))
+        {
+            setLocation(getX()-5,getY());
+        }
+    }
+    public void firebala()
+    {
+        if (Greenfoot.isKeyDown("space") && canFire == true)
+        {
+            getWorld().addObject(new bala(),getX(), getY()-30);
+            canFire = false;
+        }
+        else if (!Greenfoot.isKeyDown("space"))
+        {
+            canFire = true;
+        }
+    }
+}
+BALA O PROJECTIL
+import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+
+/**
+ * Write a description of class bala here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class bala extends Actor
+{
+    /**
+     * Act - do whatever the bala wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
+    public void act()
+    {
+        balamove();
+        removeFromWorld();
+    }
+    public void balamove()
+    {
+        setLocation(getX(),getY() - 5);
+    }
+    public void removeFromWorld()
+    {
+         if (getY()==0)
+            {
+                getWorld().removeObject(this);
+            }
+    }
+}
